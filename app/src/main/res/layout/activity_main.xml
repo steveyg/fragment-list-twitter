@@ -58,16 +58,17 @@
             android:layout_gravity="fill_horizontal"
             android:gravity="center_horizontal"
             android:text="@string/taggedSearches"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="gone"/>
 
-        <ListView
-            android:id="@android:id/list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="fill"
-            android:layout_marginBottom="@dimen/tagged_searches_padding"
-            android:layout_marginTop="@dimen/tagged_searches_padding"
-            android:layout_weight="1" />
+       <FrameLayout
+           android:id="@+id/fragment_holder"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
+
+
+
+           </FrameLayout>
         
     </LinearLayout>
 

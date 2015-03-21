@@ -1,0 +1,19 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.example.yg.listfragmen.SecondFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+        android:id="@+id/secondfargment"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:text="firstfragment" />
+
+    <WebView
+        android:id="@+id/wv"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></WebView>
+
+</FrameLayout>
