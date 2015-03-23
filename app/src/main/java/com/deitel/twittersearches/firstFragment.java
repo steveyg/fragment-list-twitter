@@ -90,9 +90,79 @@ public class firstFragment extends ListFragment {
         return inflater.inflate(R.layout.fragment_first, container, false);
     }
 
-    //I try to use longClick to achieve share,edit and delete,bur i failed
-    //someone in baidu said that use oncontextitemselected but i don't think it is a right way;
-    //I think in this way is also accord with the assessment :).
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (mListener != null) {
+                    final String tag = title.get(position);
+                    final String urlString = getString(R.string.searchURL) +
+                            Uri.encode(MainActivity.savedSearches.getString(tag, ""), "UTF-8");
+//            mListener.sendPositionToFragment2(urlString);
+//            final String tag = title.get(position);
+
+                    // create a new AlertDialog
+                    AlertDialog.Builder builder =
+                            new AlertDialog.Builder(firstFragment.this.getActivity());
+
+                    // set the AlertDialog's title
+                    builder.setTitle(
+                            getString(R.string.shareEditDeleteTitle, tag));
+
+                    // set list of items to display in dialog
+                    builder.setItems(R.array.dialog_items,
+                            new DialogInterface.OnClickListener() {
+                                // responds to user touch by sharing, editing or
+                                // deleting a saved search
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Bundle b = new Bundle();
+                                    b.putString("tag", tag);
+                                    b.putString("url", urlString);
+                                    Message msg = new Message();
+                                    msg.setData(b);
+                                    switch (which) {
+                                        case 0: // share
+                                            msg.what = HandlerMsgUtil.SHARE_CODE;
+                                            MainActivity.myhandler.sendMessage(msg);
+                                            break;
+                                        case 1: // edit
+                                            // set EditTexts to match chosen tag and query
+                                            msg.what = HandlerMsgUtil.EDIT_CODE;
+                                            MainActivity.myhandler.sendMessage(msg);
+//                                    tagEditText.setText(tag);
+//                                    queryEditText.setText(
+//                                            savedSearches.getString(tag, ""));
+                                            break;
+                                        case 2: // delete
+                                            msg.what = HandlerMsgUtil.DELITE_CODE;
+                                            MainActivity.myhandler.sendMessage(msg);
+                                            break;
+                                    }
+                                }
+                            } // end DialogInterface.OnClickListener
+                    ); // end call to builder.setItems
+
+                    // set the AlertDialog's negative Button
+                    builder.setNegativeButton(getString(R.string.cancel),
+                            new DialogInterface.OnClickListener() {
+                                // called when the "Cancel" Button is clicked
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel(); // dismiss the AlertDialog
+                                }
+                            }
+                    ); // end call to setNegativeButton
+
+                    builder.create().show(); // display the AlertDialog
+                }
+                return true;
+            }
+        });
+
+    }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
@@ -103,62 +173,14 @@ public class firstFragment extends ListFragment {
 //            mListener.sendPositionToFragment2(urlString);
 //            final String tag = title.get(position);
 
-            // create a new AlertDialog
-            AlertDialog.Builder builder =
-                    new AlertDialog.Builder(firstFragment.this.getActivity());
+            Bundle b = new Bundle();
+            b.putString("tag", tag);
+            b.putString("url", urlString);
+            Message msg = new Message();
+            msg.setData(b);
 
-            // set the AlertDialog's title
-            builder.setTitle(
-                    getString(R.string.shareEditDeleteTitle, tag));
+            mListener.sendPositionToFragment2(urlString);
 
-            // set list of items to display in dialog
-            builder.setItems(R.array.dialog_items,
-                    new DialogInterface.OnClickListener() {
-                        // responds to user touch by sharing, editing or
-                        // deleting a saved search
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Bundle b = new Bundle();
-                            b.putString("tag", tag);
-                            b.putString("url", urlString);
-                            Message msg = new Message();
-                            msg.setData(b);
-                            switch (which) {
-                                case 0:
-                                    mListener.sendPositionToFragment2(urlString);
-                                    break;
-                                case 1: // share
-                                     msg.what = HandlerMsgUtil.SHARE_CODE;
-                                    MainActivity.myhandler.sendMessage(msg);
-                                    break;
-                                case 2: // edit
-                                    // set EditTexts to match chosen tag and query
-                                    msg.what = HandlerMsgUtil.EDIT_CODE;
-                                    MainActivity.myhandler.sendMessage(msg);
-//                                    tagEditText.setText(tag);
-//                                    queryEditText.setText(
-//                                            savedSearches.getString(tag, ""));
-                                    break;
-                                case 3: // delete
-                                   msg.what = HandlerMsgUtil.DELITE_CODE;
-                                    MainActivity.myhandler.sendMessage(msg);
-                                    break;
-                            }
-                        }
-                    } // end DialogInterface.OnClickListener
-            ); // end call to builder.setItems
-
-            // set the AlertDialog's negative Button
-            builder.setNegativeButton(getString(R.string.cancel),
-                    new DialogInterface.OnClickListener() {
-                        // called when the "Cancel" Button is clicked
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel(); // dismiss the AlertDialog
-                        }
-                    }
-            ); // end call to setNegativeButton
-
-            builder.create().show(); // display the AlertDialog
         }
     }
 
